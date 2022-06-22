@@ -11,82 +11,95 @@
 import java.util.Scanner;
 public class p11 {
     Scanner sn = new Scanner(System.in);
-    int [] matricula = new int [5];
-    String [] carrera = new String [5];
-    double promlocal=0;
+    double [][] HorasTrab = new double[5][6];
+    String [] days = new String[6]; //{"Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"};//Solo 6 dias
+    int [] Maquinas = new int [5];
+    double [] HorasTotalesxDia = new double[6];
     public void MenuOpc(int opc)
-    {   //int []vmatricula;
-    //     String []vcarrera;
-        p11 pr = new p11();
+    {   p11 pr = new p11();
         switch (opc) {
-            case 1: //Crear carrera
-                pr.CrearCarreras(carrera);
+            case 1: //Registrar las máquinas
+                pr.RegistrarMaquinas(Maquinas);
                 break;
-            case 2: //Registro de Cantidad de Matriculados por Carrera
-                pr.RegistroMatriculaXCarrera(matricula, carrera);
+            case 2: //Registrar los días de la semana
+                pr.RegistrarDias(days);
                 break;
-            case 3: //Total de estudiantes matriculados en una Carrera X
-                pr.TotalMatriculaXCarrera(matricula, carrera);
+            case 3: //Registrar las horas trabajadas
+                pr.RegistrarHoras(HorasTrab,days,Maquinas);
                 break;
-            case 4: //Promedio de estudiantes matriculados
-                promlocal=pr.PromMatricula(matricula, carrera);
+            case 4: //Consultar Dia en que se trabajaron mayor cantidad de horas
+                pr.DiaMayorHorasTrab(HorasTotalesxDia,days);
                 break;
-            case 5: //Carreras por debajo del promedio de estudiantes matriculados
-                pr.CarrerasXDebajoProm(matricula, carrera, promlocal);
+            case 5: //Consultar Porcentajes de Cantidad de Horas trabajadas por día
+                pr.PorcentajesHorasxDias();
                 break;
-            case 6: //Carrera con mayor cantidad de Matriculados
-                pr.CarreraWMayorMatricula(matricula, carrera);
+            case 6: //Consultar los promedios de horas trabajadas por una máquina X en la semana
+                pr.PromHrxMaq();
                 break;
-            case 7: //Salir
+            case 7: //Consultar cuáles fueron las 2 máquinas que trabajaron un mayor y un menor número de horas durante la semana
+                pr.MaqMayMenor();
+                break;
+            case 8: //Salir
                 break;
             default:
                 break;
         }
     }
-    public void CrearCarreras(String[] carrera)  //OPCION 1
-    {   //String [] carrera = new String [5]; 
-        for(int fi=0; fi<=carrera.length-1;fi++)
-        {   System.out.printf("Ingrese la carrera %d: ", fi+1);
-            carrera[fi] = sn.nextLine();
+    public void RegistrarMaquinas(int []Maquinas)  //OPCION 1
+    {   for(int fi=0; fi<=4;fi++) //Maq
+        {   System.out.printf("Ingrese el ID de la Maquina %d: ", fi+1); 
+            Maquinas[fi]= sn.nextInt();
         }   
     }
-    public void RegistroMatriculaXCarrera(int[] matricula, String[] carrera) //OPCION 2
-    {   for(int fi=0; fi<=matricula.length-1;fi++)
-        {   System.out.printf("Ingrese la matricula de la carrera %s: ", carrera[fi]);//de %s : ", carrera[fi]); Aqui queria que imprimiera el nombre de la carrrera en lugar del numero 
-            matricula[fi] = sn.nextInt();
+    public void RegistrarDias(String []days) //OPCION 2
+    {   for(int fi=0; fi<=5;fi++)
+        {   System.out.printf("Ingrese el %d dia que trabajaran las maquinas: ", fi+1);
+            days[fi] = sn.nextLine();
         } 
     }
-    public void TotalMatriculaXCarrera(int matricula[], String carrera[]) //OPCION 3 
-    {   for(int fi=0; fi<=matricula.length-1;fi++)
-        {   System.out.printf("El total de estudiantes de la carrera %s es de: %d\n", carrera[fi], matricula[fi]);
-        } 
-    }
-    public double PromMatricula(int matricula[], String carrera[]) //OPCION 4
-    {   int suma=0;
-        double prom=0;
-        for(int fi=0; fi<=matricula.length-1;fi++)
-        {   suma = suma+matricula[fi];
-            prom = (suma/5);
-        } 
-        System.out.printf("El promedio de estudiantes matriculados es de: %.2f\n", prom);
-        return prom;
-    }
-    public void CarrerasXDebajoProm(int matricula[], String carrera[], double promlocal) //OPCION 5
-    {   for(int fi=0; fi<=matricula.length-1;fi++)
-        {   if(matricula[fi] < promlocal)
-            {   System.out.printf("La carrera de %s esta por debajo del promedio %.2f con %d estudiantes matriculados.\n" ,carrera[fi] ,promlocal ,matricula[fi]);
+    public void RegistrarHoras(double[][] HorasTrab, String[] days, int[]Maquinas) //OPCION 3 
+    {   for(int fi=0; fi<=4;fi++) //Maquinas
+        {   for(int si=0; si<=5;si++) //Dias
+            {   System.out.printf("\nIngrese las Horas trabajadas en la maquina %d el dia %s : ", Maquinas[fi], days[si]);    
+                HorasTrab[fi][si]=sn.nextDouble();
             }
         } 
     }
-    public void CarreraWMayorMatricula(int matricula[], String carrera[]) //OPCION 6
-    {   int pos=0, mayor = matricula[0];
-        for(int fi=0;fi<matricula.length;fi++)
-        {   if(matricula[fi]>mayor)
-            {   mayor = matricula[fi];
+    public void DiaMayorHorasTrab(double []HorasTotalesxDia,String[] days) //OPCION 4
+    {   double mayor=0;
+        int pos=0;
+        for(int si=0; si<=5;si++) //Dias
+        {   for(int fi=0; fi<=4;fi++) //Maquinas
+            {   HorasTotalesxDia[fi]=HorasTotalesxDia[fi] + HorasTrab[fi][si];
+            }
+        }
+        for(int fi=0;fi<HorasTotalesxDia.length;fi++)
+        {   if(HorasTotalesxDia[fi]>mayor)
+            {   mayor = HorasTotalesxDia[fi];
                 pos=fi;
             }
         }
-        System.out.printf("La carrera con el mayor numero de matricula es %s con %d estudiantes matriculados.\n" , carrera[pos] ,matricula[pos]);
+       System.out.printf("El dia en el que se trabajaron mas horas fue el %s con %.2f horas \n", days[pos],mayor);
+    }
+    public void PorcentajesHorasxDias() //OPCION 5
+    {//    for(int fi=0; fi<=matricula.length-1;fi++)
+    //     {   if(matricula[fi] < promlocal)
+    //         {   System.out.printf("La carrera de %s esta por debajo del promedio %.2f con %d estudiantes matriculados.\n" ,carrera[fi] ,promlocal ,matricula[fi]);
+    //         }
+    //     } 
+    }
+    public void PromHrxMaq() //OPCION 6
+    {
+    }
+    public void MaqMayMenor() //OPCION 7
+    {//    int pos=0, mayor = matricula[0];
+    //     for(int fi=0;fi<matricula.length;fi++)
+    //     {   if(matricula[fi]>mayor)
+    //         {   mayor = matricula[fi];
+    //             pos=fi;
+    //         }
+    //     }
+    //     System.out.printf("La carrera con el mayor numero de matricula es %s con %d estudiantes matriculados.\n" , carrera[pos] ,matricula[pos]);
     }
     public static void main(String[] args) {
         Scanner sn = new Scanner(System.in);
